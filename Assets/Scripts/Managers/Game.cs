@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class Game : SingleInstance<Game>
 {
+    public static bool IsPaused = false;
+
     public static GameObject Dynamic
     {
-        get {
+        get
+        {
             if (dynamic == null)
             {
                 dynamic = GameObject.Find("_Dynamic");
@@ -18,9 +21,29 @@ public class Game : SingleInstance<Game>
     }
     private static GameObject dynamic;
 
-    public static void Pause()
+    private static GameObject dynamicCanvasInstance;
+
+    // ---
+
+
+    async void Start()
     {
-        print("pause");
+        Screen.SetResolution(960, 540, false);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown("f"))
+        {
+            if (!Screen.fullScreen)
+            {
+                Screen.SetResolution(1920, 1080, true);
+            }
+            else
+            {
+                Screen.SetResolution(960, 540, false);
+            }
+        }
     }
 
     /// <summary>
@@ -37,10 +60,57 @@ public class Game : SingleInstance<Game>
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public static GameObject New(string name) 
+    public static GameObject New(string name)
     {
         GameObject go = new GameObject();
         go.transform.parent = Dynamic.transform;
         return go;
+    }
+
+    /// <summary>
+    /// Spawns a copy of the provided prefab inside the DynamicCanvasFolder GameObject.
+    /// <param name="prefab">The GameObject to create a copy of.</param>
+    /// <param name="hierarchy">The sorting layer to place the prerab instance into. Higher numbers have priority of lower ones.</param>
+    /// </summary>
+    public static GameObject NewCanvasElement(GameObject prefab, int hierarchy = 0)
+    {
+        List<GameObject> folders = new List<GameObject>();
+
+        int i = 0;
+        while (i <= hierarchy)
+        {
+            string name = $"_DynamicCanvasFolder_{i}";
+            GameObject folder = GameObject.Find(name);
+
+            // Create new folder
+            if (folder == null)
+            {
+                if (dynamicCanvasInstance == null)
+                {
+                    dynamicCanvasInstance = Instantiate(Prefabs.Get("Canvas"));
+                    dynamicCanvasInstance.name = "DynamicCanvas";
+                }
+
+                folder = new GameObject(name);
+                folder.AddComponent<RectTransform>();
+
+                folder.GetComponent<RectTransform>().SetParent(dynamicCanvasInstance.GetComponent<RectTransform>());
+
+                folder.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
+                folder.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
+                folder.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
+                folder.GetComponent<RectTransform>().anchorMax = new Vector2(1, 1);
+                folder.GetComponent<RectTransform>().localScale = Vector3.one;
+            }
+
+            folders.Add(folder);
+
+            i++;
+        }
+
+        return Instantiate(
+            original: prefab,
+            parent: folders[hierarchy].GetComponent<RectTransform>()
+        );
     }
 }

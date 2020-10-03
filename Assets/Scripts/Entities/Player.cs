@@ -2,55 +2,69 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Character, ILiverExtra
+public class Player : Character, ILiverExtra, IAnimatorExtra
 {
     public float MoveSpeed = 0.25f;
+    public List<Sprite> Sprites;
+
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+    private Mover mover;
+
+    private Vector2 velocity = new Vector2(0, 0);
+
+    protected override void Start()
+    {
+        base.Start();
+        animator = GetComponentInChildren<Animator>();
+        animator.Setup(Sprites);
+        mover = GetComponentInChildren<Mover>();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        
+        Move();
+    }
+
+    private void Move() 
+    {
+        velocity = Vector2.zero;
+
+        if (Input.GetKey(KeyCode.RightArrow)) {
+            velocity = new Vector2(velocity.x + MoveSpeed, velocity.y);
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            velocity = new Vector2(velocity.x - MoveSpeed, velocity.y);
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow)) {
+            velocity = new Vector2(velocity.x, velocity.y + MoveSpeed);
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow)) {
+            velocity = new Vector2(velocity.x, velocity.y - MoveSpeed);
+        }
+
+        mover.Move(velocity * Time.deltaTime);
+    }
 
     public void HealthDepleted(HitBox other)
     {
         
     }
 
-    protected override void Start()
+    public AnimationState CurrentState()
     {
-        base.Start();
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (Input.GetKey("d")) {
-            transform.position = new Vector3(transform.position.x + (MoveSpeed * Time.deltaTime), transform.position.y, transform.position.z);
-        }
-
-        if (Input.GetKey("a")) {
-            transform.position = new Vector3(transform.position.x - (MoveSpeed * Time.deltaTime), transform.position.y, transform.position.z);
-        }
-
-        if (Input.GetKey("w")) {
-            transform.position = new Vector3(transform.position.x, transform.position.y + (MoveSpeed * Time.deltaTime), transform.position.z);
-        }
-
-        if (Input.GetKey("s")) {
-            transform.position = new Vector3(transform.position.x, transform.position.y - (MoveSpeed * Time.deltaTime), transform.position.z);
-        }
-
-        if (Input.GetKeyDown("p"))
+        if (velocity == Vector2.zero) 
         {
-            Sound.Play("jump");
+            return new AnimationState("Idle", new IntegerRange(0,0));
         }
-
-        if (Input.GetKeyDown("f"))
+        else 
         {
-            if (!Screen.fullScreen) 
-            {
-                Screen.SetResolution(1920, 1080, true);
-            }
-            else
-            {
-                Screen.SetResolution(960, 540, false);
-            }
+            return new AnimationState("Walk", new IntegerRange(1,3));
         }
     }
 }
