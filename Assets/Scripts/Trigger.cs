@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class TriggerEnterEventArgs
 {
-    public Collider2D Other { get; private set; }
+    public Collider Other { get; private set; }
 
-    public TriggerEnterEventArgs(Collider2D other)
+    public TriggerEnterEventArgs(Collider other)
     {
         Other = other;
     }
@@ -15,7 +15,7 @@ public class Trigger : MonoBehaviour
 {
     public event EventHandler<TriggerEnterEventArgs> TriggerEnter;
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter(Collider other)
     {
         if (TriggerEnter != null) TriggerEnter(this, new TriggerEnterEventArgs(other));
     }

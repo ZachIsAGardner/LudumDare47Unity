@@ -1,187 +1,186 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.UI;
+﻿// using System;
+// using System.Collections;
+// using System.Collections.Generic;
+// using System.Linq;
+// using UnityEngine;
+// using UnityEngine.UI;
 
-public interface IAnimatorExtra
-{
-    AnimationState CurrentState();
-}
+// public interface IAnimatorExtra
+// {
+//     AnimationState CurrentState();
+// }
 
-public class AnimationEvent
-{
-    public int SpriteIndex;
-    public Action Action;
+// public class AnimationEvent
+// {
+//     public int SpriteIndex;
+//     public Action Action;
 
-    public AnimationEvent(int spriteIndex, Action newAction)
-    {
-        SpriteIndex = spriteIndex;
-        Action = newAction;
-    }
+//     public AnimationEvent(int spriteIndex, Action newAction)
+//     {
+//         SpriteIndex = spriteIndex;
+//         Action = newAction;
+//     }
 
-    public static bool IncludesString(string[] strings, string target)
-        => strings.Any(s => s == target);
-}
+//     public static bool IncludesString(string[] strings, string target)
+//         => strings.Any(s => s == target);
+// }
 
-public class AnimationState
-{
-    public string Name { get; private set; }
-    // The range on the sprite sheet this state is mapped to
-    public IntegerRange Range { get; private set; }
-    public List<AnimationEvent> AnimationEvents { get; private set; }
-    public bool Loop { get; private set; }
-    public float Speed { get; private set; }
-    public IntegerRange LoopRange { get; private set; }
+// public class AnimationState
+// {
+//     public string Name { get; private set; }
+//     // The range on the sprite sheet this state is mapped to
+//     public IntegerRange Range { get; private set; }
+//     public List<AnimationEvent> AnimationEvents { get; private set; }
+//     public bool Loop { get; private set; }
+//     public float Speed { get; private set; }
+//     public IntegerRange LoopRange { get; private set; }
 
-    public AnimationState(
-        string name,
-        IntegerRange range,
-        List<AnimationEvent> animationEvents = null,
-        bool loop = true,
-        float speed = 1,
-        IntegerRange loopRange = null
-    )
-    {
-        Name = name;
-        Range = range;
-        AnimationEvents = animationEvents;
-        Loop = loop;
-        Speed = speed;
-        LoopRange = loopRange;
-    }
-}
+//     public AnimationState(
+//         string name,
+//         IntegerRange range,
+//         List<AnimationEvent> animationEvents = null,
+//         bool loop = true,
+//         float speed = 1,
+//         IntegerRange loopRange = null
+//     )
+//     {
+//         Name = name;
+//         Range = range;
+//         AnimationEvents = animationEvents;
+//         Loop = loop;
+//         Speed = speed;
+//         LoopRange = loopRange;
+//     }
+// }
 
-// ---
+// // ---
 
-public class Animator : MonoBehaviour
-{
-    // References
-    [Header("Visual Renderers (Pick one)")]
-    [SerializeField] protected SpriteRenderer spriteRenderer;
-    [SerializeField] protected Image imageRenderer;
-    [SerializeField] protected MeshRenderer meshRenderer;
+// public class Animator : MonoBehaviour
+// {
+//     // References
+//     [Header("Visual Renderers (Pick one)")]
+//     [SerializeField] protected SpriteRenderer spriteRenderer;
+//     [SerializeField] protected Image imageRenderer;
+//     [SerializeField] protected MeshRenderer meshRenderer;
 
-    public List<Sprite> Sprites = new List<Sprite>();
+//     public List<Sprite> Sprites = new List<Sprite>();
 
-    public bool IsPaused { get; set; }
+//     public bool IsPaused { get; set; }
 
-    public AnimationState State;
-    private AnimationState oldState;
+//     public AnimationState State;
+//     private AnimationState oldState;
 
-    private IAnimatorExtra parent;
+//     private IAnimatorExtra parent;
 
-    // Frame Rate
-    private float tick;
-    private float ticksPerFrame = 0.12f;
+//     // Frame Rate
+//     private float tick;
+//     private float ticksPerFrame = 0.12f;
 
-    private int spriteIndex;
+//     private int spriteIndex;
 
-    // ---
+//     // ---
 
-    protected virtual void Start()
-    {
-        // Get components
-        spriteRenderer = spriteRenderer ?? GetComponentInChildren<SpriteRenderer>();
-        imageRenderer = imageRenderer ?? GetComponentInChildren<Image>();
-        meshRenderer = meshRenderer ?? GetComponentInChildren<MeshRenderer>();
+//     protected virtual void Start()
+//     {
+//         // Get components
+//         spriteRenderer = spriteRenderer ?? GetComponentInChildren<SpriteRenderer>();
+//         imageRenderer = imageRenderer ?? GetComponentInChildren<Image>();
+//         meshRenderer = meshRenderer ?? GetComponentInChildren<MeshRenderer>();
 
-        parent = GetComponentInParent<IAnimatorExtra>();
-    }
+//         parent = GetComponentInParent<IAnimatorExtra>();
+//     }
 
-    public void Setup(List<Sprite> sprites = null) 
-    {
-        this.Sprites = sprites;
-    }
+//     public void Setup(List<Sprite> sprites = null) 
+//     {
+//         this.Sprites = sprites;
+//     }
 
-    void Update()
-    {
-        if (parent != null) {
-            State = parent.CurrentState();
-        }
+//     void Update()
+//     {
+//         if (parent != null) {
+//             State = parent.CurrentState();
+//         }
 
-        if (Game.IsPaused || Sprites.IsNullOrEmpty() || IsPaused || State == null)
-        {
-            print(State);
-            return;
-        }
+//         if (Game.IsPaused || Sprites.IsNullOrEmpty() || IsPaused || State == null)
+//         {
+//             return;
+//         }
 
-        if (oldState == null || oldState.Name != State.Name)
-        {
-            spriteIndex = State.Range.Min;
-            tick = 0;
+//         if (oldState == null || oldState.Name != State.Name)
+//         {
+//             spriteIndex = State.Range.Min;
+//             tick = 0;
 
-            ExecuteAnimationState();
-            oldState = State;
-        }
+//             ExecuteAnimationState();
+//             oldState = State;
+//         }
 
-        Animate();
-    }
+//         Animate();
+//     }
 
-    // ---
+//     // ---
 
-    public void GoToIndex(int spriteIndex)
-    {
-        this.spriteIndex = spriteIndex;
-        ExecuteAnimationState();
-    }
+//     public void GoToIndex(int spriteIndex)
+//     {
+//         this.spriteIndex = spriteIndex;
+//         ExecuteAnimationState();
+//     }
 
-    // ---
+//     // ---
 
-    // Display sprite and execute events
-    private void ExecuteAnimationState()
-    {
-        // Display sprite
-        if (spriteRenderer != null)
-            spriteRenderer.sprite = Sprites[spriteIndex];
-        else if (imageRenderer != null)
-            imageRenderer.sprite = Sprites[spriteIndex];
-        else if (meshRenderer != null)
-            meshRenderer.material.mainTexture = Sprites[spriteIndex].texture;
-        else
-            throw new Exception("This GameObject does not have any visual components attached.");
+//     // Display sprite and execute events
+//     private void ExecuteAnimationState()
+//     {
+//         // Display sprite
+//         if (spriteRenderer != null)
+//             spriteRenderer.sprite = Sprites[spriteIndex];
+//         else if (imageRenderer != null)
+//             imageRenderer.sprite = Sprites[spriteIndex];
+//         else if (meshRenderer != null)
+//             meshRenderer.material.mainTexture = Sprites[spriteIndex].texture;
+//         else
+//             throw new Exception("This GameObject does not have any visual components attached.");
 
-        // Execute events
-        if (!State.AnimationEvents.IsNullOrEmpty())
-            foreach (AnimationEvent animationEvent in State.AnimationEvents)
-                if (spriteIndex == animationEvent.SpriteIndex) animationEvent.Action();
-    }
+//         // Execute events
+//         if (!State.AnimationEvents.IsNullOrEmpty())
+//             foreach (AnimationEvent animationEvent in State.AnimationEvents)
+//                 if (spriteIndex == animationEvent.SpriteIndex) animationEvent.Action();
+//     }
 
-    // Increment sprite index
-    private void Animate()
-    {
-        tick += State.Speed * Time.deltaTime;
-        int oldSpriteIndex = spriteIndex;
+//     // Increment sprite index
+//     private void Animate()
+//     {
+//         tick += State.Speed * Time.deltaTime;
+//         int oldSpriteIndex = spriteIndex;
 
-        if (tick > ticksPerFrame)
-        {
-            spriteIndex += 1;
-            tick = 0;
+//         if (tick > ticksPerFrame)
+//         {
+//             spriteIndex += 1;
+//             tick = 0;
 
-            // Index is greater than loop range
-            if (State.LoopRange != null && spriteIndex > State.LoopRange.Max)
-                spriteIndex = State.LoopRange.Min;
+//             // Index is greater than loop range
+//             if (State.LoopRange != null && spriteIndex > State.LoopRange.Max)
+//                 spriteIndex = State.LoopRange.Min;
 
-            // Index is greater than state range
-            if (spriteIndex > State.Range.Max)
-            {
-                if (State.Loop) spriteIndex = State.Range.Min;
-                else spriteIndex = State.Range.Max;
-            }
+//             // Index is greater than state range
+//             if (spriteIndex > State.Range.Max)
+//             {
+//                 if (State.Loop) spriteIndex = State.Range.Min;
+//                 else spriteIndex = State.Range.Max;
+//             }
 
-            // Index is greater than entire sprite sheet length
-            if (spriteIndex > Sprites.Count - 1)
-            {
-                if (State.Loop) spriteIndex = 0;
-                else spriteIndex = Sprites.Count - 1;
-            }
+//             // Index is greater than entire sprite sheet length
+//             if (spriteIndex > Sprites.Count - 1)
+//             {
+//                 if (State.Loop) spriteIndex = 0;
+//                 else spriteIndex = Sprites.Count - 1;
+//             }
 
-            // If our sprite index is still the same we 
-            // don't really need to do anything, else we need to 
-            // execute animation state
-            if (oldSpriteIndex != spriteIndex) ExecuteAnimationState();
-        }
-    }
-}
+//             // If our sprite index is still the same we 
+//             // don't really need to do anything, else we need to 
+//             // execute animation state
+//             if (oldSpriteIndex != spriteIndex) ExecuteAnimationState();
+//         }
+//     }
+// }
 

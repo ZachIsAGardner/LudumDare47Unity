@@ -156,7 +156,6 @@ public class TextBox : MonoBehaviour
 
     private async Task DisplayTextAsync(string text)
     {
-        print("display text");
         IsActive = true;
         displayedText = "";
 
@@ -170,7 +169,7 @@ public class TextBox : MonoBehaviour
 
             if (Tone != null && toneInterval <= 0)
             {
-                // Sound.Play(Tone);
+                Sound.Play(Tone);
                 toneInterval = ToneIntervalMax;
             }
 

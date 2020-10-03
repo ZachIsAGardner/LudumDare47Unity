@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Game : SingleInstance<Game>
 {
     public static bool IsPaused = false;
+    private static int spawnPoint = 0;
 
     public static GameObject Dynamic
     {
@@ -26,10 +29,27 @@ public class Game : SingleInstance<Game>
     // ---
 
 
-    async void Start()
+    async void Awake()
     {
         Screen.SetResolution(960, 540, false);
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        var player = Game.New(Prefabs.Get("Player"));
+
+        var spawn = FindObjectsOfType<Spawn>().ToList().Find(s => s.SpawnID == spawnPoint);
+
+        if (spawn)
+        {
+            player.transform.position = spawn.transform.position;
+        }
+        else
+        {
+            player.transform.position = Vector3.zero;
+        }
+    }   
 
     void Update()
     {
@@ -50,9 +70,10 @@ public class Game : SingleInstance<Game>
     /// Load a scene with the provided name.
     /// </summary>
     /// <param name="sceneName">The name of the scene to load.</param>
-    public static void Load(string sceneName)
+    public static void Load(string sceneName, int spawnPoint = 0)
     {
-        throw new NotImplementedException();
+        spawnPoint = 0;
+        SceneManager.LoadScene(sceneName);
     }
 
     /// <summary>
@@ -63,8 +84,20 @@ public class Game : SingleInstance<Game>
     public static GameObject New(string name)
     {
         GameObject go = new GameObject();
+        go.name = name;
         go.transform.parent = Dynamic.transform;
         return go;
+    }
+
+    /// <summary>
+    /// Create a new GameObject in the _Dynamic folder.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public static GameObject New(GameObject prefab)
+    {
+        var inst = Instantiate(prefab, Dynamic.transform);
+        return inst;
     }
 
     /// <summary>

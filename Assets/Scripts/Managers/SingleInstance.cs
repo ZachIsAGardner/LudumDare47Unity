@@ -6,7 +6,7 @@ public abstract class SingleInstance<T> : MonoBehaviour
 {
     public static T Instance; 
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         Instance = GetComponent<T>();
     }

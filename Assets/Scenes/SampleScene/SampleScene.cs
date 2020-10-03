@@ -8,6 +8,7 @@ public class SampleScene : MonoBehaviour
     async void Start()
     {
         Trigger.TriggerEnter += Triggered;
+        Song.Play("LD47_ow");
     }
 
     private async void Triggered(object source, TriggerEnterEventArgs args)
