@@ -15,6 +15,8 @@ public class Title : MonoBehaviour
 
     void Start()
     {
+        Song.Play("Title");
+
         // Transition out
         var sceneTransition = Instantiate(Prefabs.Get<SceneTransition>("FadeSceneTransition"));
         sceneTransition.In();

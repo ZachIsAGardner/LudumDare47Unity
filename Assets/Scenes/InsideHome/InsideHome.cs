@@ -22,6 +22,7 @@ public class InsideHome : MonoBehaviour
 
     void Start()
     {
+        Song.Play("Overworld");
         ExitTrigger.TriggerEnter += Triggered;
         BedTrigger.Accepted += async (object source, bool hit) =>
         {
@@ -46,16 +47,7 @@ public class InsideHome : MonoBehaviour
 
             if (!success)
             {
-                var textBox = await Dialogue.Begin(new TextBoxModel(
-                    text: "(A terrible feeling washes over you. It's something so terrible it's indescribable)",
-                    speaker: "Your Inner Consciousness"
-                ));
-
-                await Dialogue.Next(textBox, new TextBoxModel(
-                    text: "(You were not productive enough today)",
-                    speaker: "Your Inner Consciousness"
-                ));
-                await Dialogue.End(textBox, new TextBoxModel(
+                await Dialogue.Single(new TextBoxModel(
                     text: "(Some sort of abstract goal calls to you elsewhere)",
                     speaker: "Your Inner Consciousness"
                 ));
@@ -65,10 +57,14 @@ public class InsideHome : MonoBehaviour
 
     async void Update()
     {
+        if (Game.CurrentDay == 1)
+        {
+            ExitTrigger.gameObject.SetActive(false);
+        }
+
         // Excercise Day
         if (Game.CurrentDay == 1 && Game.Player != null && Story.Flags.Contains("DayExcerciseEnd"))
         {
-            ExitTrigger.gameObject.SetActive(false);
 
             if (Game.Player.JumpCount > 0 && !Story.Flags.Contains("Excercise1"))
             {
@@ -95,6 +91,7 @@ public class InsideHome : MonoBehaviour
                 ));
                 room.GetComponent<Animator>().SetInteger("State", 1);
                 room.GetComponent<Animator>().speed = 0.25f;
+                Song.ChangePitch(1.2f, 0.25f);
                 Game.Player.Gravity *= 1.25f;
             }
             if (Game.Player.JumpCount > 14 && !Story.Flags.Contains("Excercise4"))
@@ -105,6 +102,7 @@ public class InsideHome : MonoBehaviour
                     speaker: $"{Story.Narrator}"
                 ));
                 room.GetComponent<Animator>().speed = 0.5f;
+                Song.ChangePitch(1.4f, 0.25f);
                 Game.Player.Gravity *= 1.25f;
             }
             if (Game.Player.JumpCount > 19 && !Story.Flags.Contains("Excercise5"))
@@ -115,6 +113,7 @@ public class InsideHome : MonoBehaviour
                     speaker: $"{Story.Narrator}"
                 ));
                 room.GetComponent<Animator>().speed = 0.75f;
+                Song.ChangePitch(1.6f, 0.25f);
                 Game.Player.Gravity *= 1.25f;
             }
             if (Game.Player.JumpCount > 24 && !Story.Flags.Contains("Excercise6"))
@@ -124,6 +123,7 @@ public class InsideHome : MonoBehaviour
                     text: "<color=\"red\">Wooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow!</color>",
                     speaker: $"{Story.Narrator}"
                 ));
+                Song.ChangePitch(2f, 0.25f);
                 room.GetComponent<Animator>().speed = 0.75f;
                 Game.Player.Gravity *= 1.25f;
             }
@@ -135,6 +135,7 @@ public class InsideHome : MonoBehaviour
                     speaker: $"{Story.Narrator}"
                 ));
                 room.GetComponent<Animator>().SetInteger("State", 0);
+                Song.ChangePitch(1f, 0.25f);
                 Game.Player.Gravity = Game.Player.NormalGravity;
             }
         }
@@ -148,6 +149,7 @@ public class InsideHome : MonoBehaviour
     {
         if (Game.CurrentDay == 0) Story.Greeting();
         if (Game.CurrentDay == 1) Story.DayExcercise();
+        if (Game.CurrentDay == 2) Story.DayTree();
     }
 
     private async void Triggered(object source, TriggerEnterEventArgs args)

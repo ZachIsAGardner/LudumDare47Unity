@@ -109,6 +109,25 @@ public class Story : SingleInstance<Story>
         Flags.Add("DayExcerciseEnd");
     }
 
+    public static async Task DayTree() 
+    {
+        if (Flags.Contains("DayTree")) return;
+        Flags.Add("DayTree");
+
+        var textBox = await Dialogue.Begin(new TextBoxModel(
+            text: $"Good morning!",
+            speaker: $"{Narrator}"
+        ));
+
+        await Dialogue.End(textBox, new TextBoxModel(
+            text: "Today I have another gift for you! It's outside by the trees.",
+            speaker: $"{Narrator}"
+        ));
+
+        Game.Player.JumpCount = 0;
+        Flags.Add("DayTreeEnd");
+    }
+
     public static async Task AxeGet()
     {
         if (Flags.Contains("AxeGet")) return;

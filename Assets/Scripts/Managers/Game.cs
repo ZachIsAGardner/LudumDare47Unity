@@ -132,6 +132,8 @@ public class Game : SingleInstance<Game>
     /// <param name="sceneName">The name of the scene to load.</param>
     public static async Task LoadAsync(string sceneName, SceneTransition sceneTransitionPrefab, int spawnPoint = 0)
     {
+        if (IsTransitioning) return;
+        
         Game.spawnPoint = spawnPoint;
 
         IsTransitioning = true;

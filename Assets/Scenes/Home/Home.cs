@@ -73,7 +73,7 @@ public class Home : MonoBehaviour
                     HouseContainer.GetComponent<Animator>().SetInteger("State", 2);
 
                     Story.Flags.Add("Tree3");
-                    Song.Stop();
+                    Song.ChangePitch(0f, 0.5f);
                     HouseTrigger.gameObject.SetActive(false);
                     await Dialogue.Single(new TextBoxModel(
                         text: "Oh!",
@@ -89,12 +89,23 @@ public class Home : MonoBehaviour
 
                     await new WaitForSeconds(2.5f);
                     Story.Flags.Add("Tree5");
-                    await Dialogue.Single(new TextBoxModel(
-                        text: "It appears I have failed you.",
+                    Song.ChangePitch(1f, 0.25f);
+                    var textBox = await Dialogue.Begin(new TextBoxModel(
+                        text: "Oh well!",
                         speaker: $"{Story.Narrator}"
                     ));
 
-                    await new WaitForSeconds(1.5f);
+                    await Dialogue.Next(textBox, new TextBoxModel(
+                        text: "It was kind of an eye sore anyways.",
+                        speaker: $"{Story.Narrator}"
+                    ));
+
+                    await Dialogue.End(textBox, new TextBoxModel(
+                        text: "I think that's enough for now anyways. Thanks for being such a good listener :) <3",
+                        speaker: $"{Story.Narrator}"
+                    ));
+
+                    await new WaitForSeconds(0.5f);
 
                     await Game.LoadAsync("End", Prefabs.Get<SceneTransition>("FadeSceneTransition"));
                 }

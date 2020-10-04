@@ -175,7 +175,7 @@ public class TextBox : MonoBehaviour
     private async Task DisplayTextAsync(string text)
     {
         if (gameObject == null) return;
-        
+
         IsActive = true;
         displayedText = "";
 
@@ -219,7 +219,7 @@ public class TextBox : MonoBehaviour
 
                     if (Tone != null && toneInterval <= 0)
                     {
-                        Sound.Play(Tone);
+                        Sound.Play(Tone, true, 0.5f);
                         toneInterval = ToneIntervalMax;
                     }
 
@@ -234,7 +234,7 @@ public class TextBox : MonoBehaviour
 
             if (Tone != null && toneInterval <= 0)
             {
-                Sound.Play(Tone);
+                Sound.Play(Tone, true, 0.5f);
                 toneInterval = ToneIntervalMax;
             }
 
