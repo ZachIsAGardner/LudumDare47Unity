@@ -37,9 +37,10 @@ public class Home : MonoBehaviour
         if (Story.Flags.Contains("ButterKnifeGet") || Game.CurrentDay != 0) GiftButterKnife.SetActive(false);
         if (Story.Flags.Contains("Grass3") || Game.CurrentDay != 0) GrassContainer.SetActive(false);
 
+        if (Game.Inventory.Contains("Axe")) GiftAxe.SetActive(false);
+        
         if (Game.CurrentDay != 2)
         {
-            GiftAxe.SetActive(false);
         }
         else
         {
