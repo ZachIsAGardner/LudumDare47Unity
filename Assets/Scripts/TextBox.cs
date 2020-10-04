@@ -167,13 +167,15 @@ public class TextBox : MonoBehaviour
     /// </summary>
     public void Close()
     {
-        Destroy(gameObject);
+        if (gameObject != null) Destroy(gameObject);
     }
 
     // ---
 
     private async Task DisplayTextAsync(string text)
     {
+        if (gameObject == null) return;
+        
         IsActive = true;
         displayedText = "";
 
@@ -251,14 +253,14 @@ public class TextBox : MonoBehaviour
         }
         else
         {
-            nextImage.enabled = true;
+            if (nextImage != null) nextImage.enabled = true;
             while(true) 
             {
                 if (Input.GetKeyDown("z")) break;
                 await new WaitForUpdate();
             }
         }
-        nextImage.enabled = false;
+        if (nextImage != null) nextImage.enabled = false;
 
         if (CloseWhenDone)
         {
