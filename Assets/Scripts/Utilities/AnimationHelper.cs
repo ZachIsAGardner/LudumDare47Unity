@@ -8,4 +8,9 @@ public class AnimationHelper : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void PlaySound(string name)
+    {
+        Sound.Play(name, true, 0.5f);
+    }
 }

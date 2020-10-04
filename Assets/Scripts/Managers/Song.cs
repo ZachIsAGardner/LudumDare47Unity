@@ -7,6 +7,12 @@ public class Song : SingleInstance<Song>
 
     private AudioSource audioSource;
 
+    public static void Stop()
+    {
+        if (Instance.audioSource != null)
+            Instance.audioSource.Stop();
+    }
+
     /// <summary>
     /// Start playing a song.
     /// </summary>

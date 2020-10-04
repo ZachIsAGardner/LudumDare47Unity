@@ -68,6 +68,8 @@ public class InsideHome : MonoBehaviour
         // Excercise Day
         if (Game.CurrentDay == 1 && Game.Player != null && Story.Flags.Contains("DayExcerciseEnd"))
         {
+            ExitTrigger.gameObject.SetActive(false);
+
             if (Game.Player.JumpCount > 0 && !Story.Flags.Contains("Excercise1"))
             {
                 Story.Flags.Add("Excercise1");
@@ -135,6 +137,10 @@ public class InsideHome : MonoBehaviour
                 room.GetComponent<Animator>().SetInteger("State", 0);
                 Game.Player.Gravity = Game.Player.NormalGravity;
             }
+        }
+        else
+        {
+            ExitTrigger.gameObject.SetActive(false);
         }
     }
 

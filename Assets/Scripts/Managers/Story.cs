@@ -116,4 +116,20 @@ public class Story : SingleInstance<Story>
         Game.Player.JumpCount = 0;
         Flags.Add("DayExcerciseEnd");
     }
+
+    public static async Task AxeGet()
+    {
+        if (Flags.Contains("AxeGet")) return;
+        Flags.Add("AxeGet");
+
+        var textBox = await Dialogue.Begin(new TextBoxModel(
+            text: $"You got the axe! Wow!",
+            speaker: $"{Narrator}"
+        ));
+
+        await Dialogue.End(textBox, new TextBoxModel(
+            text: "Use that to chop down that tree! The one with that's been getting chewed on by beavers.",
+            speaker: $"{Narrator}"
+        ));
+    }
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Gift : MonoBehaviour
 {
+    public string GiftType = "ButterKnife";
+
     private PromptedTrigger promptedTrigger;
     private Animator animator;
     private GameObject plane;
@@ -30,7 +32,15 @@ public class Gift : MonoBehaviour
 
         Destroy(plane);
 
-        Story.ButterKnifeGet();
-        Game.Inventory.Add("ButterKnife");
+        if (GiftType == "ButterKnife")
+        {
+            Story.ButterKnifeGet();
+            Game.Inventory.Add("ButterKnife");
+        }
+        else if (GiftType == "Axe")
+        {
+            Story.AxeGet();
+            Game.Inventory.Add("Axe");
+        }
     }
 }

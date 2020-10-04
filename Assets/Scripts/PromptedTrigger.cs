@@ -19,7 +19,7 @@ public class PromptedTrigger : MonoBehaviour
             player.InspectPrompt.SetActive(false);
         }
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     public void Disable()

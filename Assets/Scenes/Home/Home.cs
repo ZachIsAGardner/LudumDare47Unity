@@ -13,11 +13,20 @@ public class Home : MonoBehaviour
     public GameObject GrassContainer;
 
     public GameObject GiftAxe;
+    public PromptedTrigger TreeTrigger;
+    public GameObject HouseContainer;
+
+    private int treeHitCount = 0;
 
     void Start()
     {
         GiftButterKnife = GameObject.Find("GiftButterKnife");
         GrassContainer = GameObject.Find("GrassContainer");
+
+        GiftAxe = GameObject.Find("GiftAxe");
+        TreeTrigger = GameObject.Find("TreeTrigger").GetComponent<PromptedTrigger>();
+        HouseContainer = GameObject.Find("HouseContainer");
+
         Song.Play("Overworld");
 
         ExitTrigger.TriggerEnter += ExitTriggered;
@@ -28,23 +37,104 @@ public class Home : MonoBehaviour
         if (Story.Flags.Contains("ButterKnifeGet") || Game.CurrentDay != 0) GiftButterKnife.SetActive(false);
         if (Story.Flags.Contains("Grass3") || Game.CurrentDay != 0) GrassContainer.SetActive(false);
 
-        if (Game.CurrentDay != 2) GiftAxe.SetActive(false);
+        if (Game.CurrentDay != 2)
+        {
+            GiftAxe.SetActive(false);
+        }
+        else
+        {
+            TreeTrigger.Accepted += async (object source, bool hit) =>
+            {
+                treeHitCount += 1;
+
+                if (treeHitCount == 1)
+                {
+                    Story.Flags.Add("Tree1");
+                    _ = Dialogue.Single(new TextBoxModel(
+                        text: "Nice hit! Keep going!",
+                        speaker: $"{Story.Narrator}"
+                    ));
+                }
+
+                if (treeHitCount == 4)
+                {
+                    Story.Flags.Add("Tree2");
+                    _ = Dialogue.Single(new TextBoxModel(
+                        text: "Okay I know what you're thinking. \"This tree is going to fall onto my house.\" Well you're wrong. I'm an expert trust me.",
+                        speaker: $"{Story.Narrator}"
+                    ));
+                }
+
+                if (treeHitCount == 9)
+                {
+                    TreeTrigger.Deactivate();
+                    HouseContainer.GetComponent<Animator>().SetInteger("State", 2);
+
+                    Story.Flags.Add("Tree3");
+                    Song.Stop();
+                    HouseTrigger.gameObject.SetActive(false);
+                    await Dialogue.Single(new TextBoxModel(
+                        text: "Oh!",
+                        speaker: $"{Story.Narrator}"
+                    ));
+
+                    await new WaitForSeconds(2.5f);
+                    Story.Flags.Add("Tree4");
+                    await Dialogue.Single(new TextBoxModel(
+                        text: "...",
+                        speaker: $"{Story.Narrator}"
+                    ));
+
+                    await new WaitForSeconds(2.5f);
+                    Story.Flags.Add("Tree5");
+                    await Dialogue.Single(new TextBoxModel(
+                        text: "It appears I have failed you.",
+                        speaker: $"{Story.Narrator}"
+                    ));
+
+                    await new WaitForSeconds(1.5f);
+
+                    await Game.LoadAsync("End", Prefabs.Get<SceneTransition>("FadeSceneTransition"));
+                }
+                else if (treeHitCount < 9)
+                {
+                    HouseContainer.GetComponent<Animator>().SetInteger("State", 1);
+                    await new WaitForUpdate();
+                    HouseContainer.GetComponent<Animator>().SetInteger("State", -1);
+                }
+            };
+        }
+    }
+
+    void Update()
+    {
+        if (!Story.Flags.Contains("Tree3")) 
+        {
+            if (Game.Inventory.Contains("Axe"))
+            {
+                TreeTrigger.gameObject.SetActive(true);
+            }
+            else
+            {
+                TreeTrigger.gameObject.SetActive(false);
+            }
+        }
     }
 
     private async void ExitTriggered(object source, TriggerEnterEventArgs args)
     {
-        if (args.Other.CompareTag("Player")) 
+        if (args.Other.CompareTag("Player"))
         {
             Game.LoadAsync("Exit", Prefabs.Get<SceneTransition>("FadeSceneTransition"));
         }
     }
 
-    private async void HouseEntered(object source, bool hit) 
+    private async void HouseEntered(object source, bool hit)
     {
         HouseDoorAnimator.SetInteger("State", 1);
     }
 
-    private async void HouseExited(object source, bool hit) 
+    private async void HouseExited(object source, bool hit)
     {
         HouseDoorAnimator.SetInteger("State", 0);
     }
