@@ -146,9 +146,20 @@ public class TextBox : MonoBehaviour
         }
 
         if (CrawlTime > 0)
-            await DisplayTextAsync(Text);
+        {
+            try 
+            {
+                await DisplayTextAsync(Text);
+            }
+            catch(Exception err)
+            {
+                print(err);
+            }
+        }
         else
+        {
             displayedText = Text;
+        }
     }
 
     /// <summary>

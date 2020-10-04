@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 644450108764575957}
   - component: {fileID: 644450108764575958}
   - component: {fileID: 644450108764575959}
-  - component: {fileID: 644450108764575976}
   - component: {fileID: 644450108764575977}
   - component: {fileID: 644450108764575978}
   - component: {fileID: 644450108764575979}
@@ -75,18 +74,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30845a3e735af154eb2743ec7a96a45a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &644450108764575976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 644450108764575982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 570617e43326bc74e8c2ce451df279fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &644450108764575977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +87,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Songs:
+  - {fileID: 8300000, guid: 9257cb0bba9e2eb4fb857bc7bce47c2d, type: 3}
   - {fileID: 8300000, guid: 1964d2fa5c05c7a448e32a8660031a56, type: 3}
 --- !u!114 &644450108764575978
 MonoBehaviour:
@@ -117,6 +105,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ab214afc791773f4b887eaac34408fda, type: 3}
   - {fileID: 8300000, guid: af8485a60f112b249a2a081236cc7675, type: 3}
   - {fileID: 8300000, guid: df291c7fa39fe014cb19d9bbbefa8389, type: 3}
+  - {fileID: 8300000, guid: 8e4ad543e1af5e44194dd1ecbb2d0a4f, type: 3}
+  - {fileID: 8300000, guid: c9a78e17edbd0a544b7b89d81da778c8, type: 3}
+  - {fileID: 8300000, guid: 79ebb8fe92a884848a58688195a0524a, type: 3}
+  - {fileID: 8300000, guid: 1b4add5101dc11b47a00b348f84b4de5, type: 3}
 --- !u!114 &644450108764575979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +140,8 @@ MonoBehaviour:
   - {fileID: 5056229979435170154, guid: a04cbbe5abe5a994caddc19ee7dba339, type: 3}
   - {fileID: 3810108909888146878, guid: f509531448018431fbdc0ff94c6abaea, type: 3}
   - {fileID: 8411374091170027060, guid: f306c7b94f12ca94c837f9690ce26913, type: 3}
+  - {fileID: 2146815888067862786, guid: bd081c1adeee09b44b4f754208b07c55, type: 3}
+  - {fileID: 8863741295918343532, guid: 2741c6d7839706244b664219de52bd33, type: 3}
   - {fileID: 2812769265658125227, guid: 0aabe93cdb82d4f4fb41267a3f492d3a, type: 3}
   - {fileID: 4631920970188586303, guid: 15cfda8246e514d499224a061cdf8fd1, type: 3}
   - {fileID: 5059252505085745408, guid: 1f6f44bbde9674b43ba2119d15b778f6, type: 3}

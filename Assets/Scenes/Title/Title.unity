@@ -955,42 +955,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.size
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[3]
-      value: 
-      objectReference: {fileID: 5056229979435170154, guid: a04cbbe5abe5a994caddc19ee7dba339, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[4]
-      value: 
-      objectReference: {fileID: 3810108909888146878, guid: f509531448018431fbdc0ff94c6abaea, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[5]
-      value: 
-      objectReference: {fileID: 8411374091170027060, guid: f306c7b94f12ca94c837f9690ce26913, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[6]
-      value: 
-      objectReference: {fileID: 8863741295918343532, guid: 2741c6d7839706244b664219de52bd33, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[7]
-      value: 
-      objectReference: {fileID: 2812769265658125227, guid: 0aabe93cdb82d4f4fb41267a3f492d3a, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[8]
-      value: 
-      objectReference: {fileID: 4631920970188586303, guid: 15cfda8246e514d499224a061cdf8fd1, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[9]
-      value: 
-      objectReference: {fileID: 5059252505085745408, guid: 1f6f44bbde9674b43ba2119d15b778f6, type: 3}
-    - target: {fileID: 644450108764575980, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
-      propertyPath: Items.Array.data[10]
-      value: 
-      objectReference: {fileID: 3810108909888146878, guid: 9cd33bbf72a89467bab426c8f8f1b1bc, type: 3}
     - target: {fileID: 644450110343474654, guid: c6a8cc355258bb44c8dd0e8c87edb725, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

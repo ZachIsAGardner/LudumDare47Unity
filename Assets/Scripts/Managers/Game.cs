@@ -11,10 +11,15 @@ public class Game : SingleInstance<Game>
     public static bool IsPaused = false;
     public static bool IsTransitioning = false;
 
+    public static Player Player;
+    public static List<string> Inventory = new List<string>() {};
     public static string PlayerName = "";
     public static string PlayerColor = "12e1as";
     public static string NarratorName = "";
     public static string NarratorColor = "bd7455";
+
+    public static int CurrentDay = 0;
+    public static int CutGrassCount = 0;
 
     private SceneTransition sceneTransitionInstance;
     private static int spawnPoint = 0;
@@ -50,6 +55,7 @@ public class Game : SingleInstance<Game>
         if (SceneManager.GetActiveScene().name == "Title" || SceneManager.GetActiveScene().name == "End") return;
 
         var player = Game.New(Prefabs.Get("Player"));
+        Player = player.GetComponent<Player>();
 
         var spawn = FindObjectsOfType<Spawn>().ToList().Find(s => s.SpawnID == spawnPoint);
 
@@ -63,7 +69,7 @@ public class Game : SingleInstance<Game>
         }
     }
 
-    void Update()
+    async void Update()
     {
         if (Input.GetKeyDown("f"))
         {
@@ -75,6 +81,48 @@ public class Game : SingleInstance<Game>
             {
                 Screen.SetResolution(960, 540, false);
             }
+        }
+
+        GrassDialogue();
+    }
+
+    async void GrassDialogue()
+    {
+        if (CutGrassCount > 0 && !Story.Flags.Contains("Grass1"))
+        {
+            Story.Flags.Add("Grass1");
+            await Dialogue.Single(new TextBoxModel(
+                text: "Wow you're amazing! Keep it up!",
+                speaker: $"{Story.Narrator}"
+            ));
+        }
+
+        if (CutGrassCount > 4 && !Story.Flags.Contains("Grass2"))
+        {
+            Story.Flags.Add("Grass2");
+            await Dialogue.Single(new TextBoxModel(
+                text: "You truly are something!",
+                speaker: $"{Story.Narrator}"
+            ));
+        }
+
+        if (CutGrassCount > 10 && !Story.Flags.Contains("Grass3"))
+        {
+            Story.Flags.Add("Grass3");
+            var textBox = await Dialogue.Begin(new TextBoxModel(
+                text: "That's it! You've done it all! There's no more grass left in this world.",
+                speaker: $"{Story.Narrator}"
+            ));
+
+            await Dialogue.Next(textBox, new TextBoxModel(
+                text: "Grass is no more :)",
+                speaker: $"{Story.Narrator}"
+            ));
+
+            await Dialogue.End(textBox, new TextBoxModel(
+                text: "I think it's safe to call it a day. You should go inside and get some rest.",
+                speaker: $"{Story.Narrator}"
+            ));
         }
     }
 

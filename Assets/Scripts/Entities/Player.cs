@@ -8,6 +8,7 @@ public class Player : Character, ILiverExtra
     public float Acc = 0.1f;
     public GameObject Model;
     public float Gravity = 0.25f;
+    public float NormalGravity;
     public float MinJumpStrength = 0.5f;
     public float JumpStrength = 1f;
     public GameObject InspectPrompt;
@@ -21,6 +22,7 @@ public class Player : Character, ILiverExtra
 
     private Vector3 velocity = new Vector3(0, 0, 0);
     private int dir = 0;
+    public int JumpCount = 0;
 
     protected override void Start()
     {
@@ -28,6 +30,7 @@ public class Player : Character, ILiverExtra
         animator = GetComponentInChildren<Animator>();
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
+        NormalGravity = Gravity;
 
         startPosition = transform.position;
     }
@@ -87,6 +90,7 @@ public class Player : Character, ILiverExtra
 
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
+            JumpCount += 1;
             rigidbody.velocity = new Vector3(rigidbody.velocity.x, rigidbody.velocity.y + JumpStrength, rigidbody.velocity.z);
         }
 

@@ -4,33 +4,31 @@ using UnityEngine;
 
 public class Home : MonoBehaviour
 {
-    public Trigger Trigger;
     public PromptedTrigger HouseTrigger;
     public Trigger ExitTrigger;
     private bool triggered = false;
     public Animator HouseDoorAnimator;
 
+    public GameObject GiftButterKnife;
+    public GameObject GrassContainer;
+
+    public GameObject GiftAxe;
+
     void Start()
     {
-        Song.Play("LD47_ow");
+        GiftButterKnife = GameObject.Find("GiftButterKnife");
+        GrassContainer = GameObject.Find("GrassContainer");
+        Song.Play("Overworld");
 
-        Dialogue.Single(new TextBoxModel(
-            text: "Eliminate the boxes"
-        ));
-
-        Trigger.TriggerEnter += Triggered;
         ExitTrigger.TriggerEnter += ExitTriggered;
-        HouseTrigger.PromptedTriggerAccepted += HouseAccepted;
-        HouseTrigger.PromptedTriggerEntered += HouseEntered;
-        HouseTrigger.PromptedTriggerExited += HouseExited;
-    }
+        HouseTrigger.Accepted += HouseAccepted;
+        HouseTrigger.Entered += HouseEntered;
+        HouseTrigger.Exited += HouseExited;
 
-    private async void Triggered(object source, TriggerEnterEventArgs args)
-    {
-        if (args.Other.CompareTag("Player")) 
-        {
-            DisplayText();
-        }
+        if (Story.Flags.Contains("ButterKnifeGet") || Game.CurrentDay != 0) GiftButterKnife.SetActive(false);
+        if (Story.Flags.Contains("Grass3") || Game.CurrentDay != 0) GrassContainer.SetActive(false);
+
+        if (Game.CurrentDay != 2) GiftAxe.SetActive(false);
     }
 
     private async void ExitTriggered(object source, TriggerEnterEventArgs args)
@@ -54,24 +52,5 @@ public class Home : MonoBehaviour
     private async void HouseAccepted(object source, bool hit)
     {
         Game.LoadAsync("InsideHome", Prefabs.Get<SceneTransition>("FadeSceneTransition"));
-    }
-
-    private async void DisplayText()
-    {
-        if (triggered) return;
-
-        triggered = true;
-        
-        var textBox = await Dialogue.Begin(new TextBoxModel(
-            text: "Hello it is I, the narrator."
-        ));
-
-        await Dialogue.Next(textBox, new TextBoxModel(
-            text: "I am epic."
-        ));
-
-        await Dialogue.End(textBox, new TextBoxModel(
-            text: "Watch out for my stuff."
-        ));
     }
 }

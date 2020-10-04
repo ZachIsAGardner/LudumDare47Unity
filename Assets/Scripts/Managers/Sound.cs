@@ -24,7 +24,7 @@ public class Sound : SingleInstance<Sound>
     /// Play a sound effect.
     /// </summary>
     /// <param name="sfxName">The name of the sfx to play.</param>
-    public static void Play(string sfxName, bool interupt = true) 
+    public static void Play(string sfxName, bool interupt = true, float volume = 1) 
     {
         AudioClip clip = Instance.Sounds.Find(f => f.name == sfxName);
 
@@ -37,6 +37,7 @@ public class Sound : SingleInstance<Sound>
             GameObject go = Game.New(clip.name);
             audioSource = go.AddComponent<AudioSource>();
             audioSources.Add(audioSource);
+            audioSource.volume = volume;
         }
         else 
         {

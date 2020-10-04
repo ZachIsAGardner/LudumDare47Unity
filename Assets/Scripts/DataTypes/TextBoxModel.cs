@@ -27,8 +27,8 @@ public class TextBoxModel
         Text = text;
         Speaker = speaker;
         Auto = auto;
-        Tone = tone;
-        CrawlTime = crawlTime ?? Constants.CRAWL_TIME;
+        Tone = tone ?? CONSTANTS.TEXT_TONE;
+        CrawlTime = crawlTime ?? CONSTANTS.CRAWL_TIME;
         CloseWhenDone = closeWhenDone;
         ToneIntervalMax = toneIntervalMax;
         ProceedInputs = proceedInputs;

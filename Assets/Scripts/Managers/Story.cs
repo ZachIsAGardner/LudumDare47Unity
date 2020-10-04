@@ -37,15 +37,35 @@ public class Story : SingleInstance<Story>
         "Soup Slurper",
         "Shirt",
         "Bucket o' Beans",
+        "Bucko",
     };
 
-    public static string Player => $"<color=#{Game.PlayerColor}>{Game.PlayerName}</color>";
-    public static string Narrator => $"<color=#{Game.NarratorColor}>{Game.NarratorName}</color>";
+    public static string Player { get { 
+        if (Game.PlayerName.IsNullOrEmpty()) 
+        {
+            Game.PlayerName = (Game.NarratorName.IsNullOrEmpty()) 
+                ? Names.Random()
+                : Names.FindAll(n => n != Game.NarratorName).Random();
+        }
+        return $"<color=#{Game.PlayerColor}>{Game.PlayerName}</color>"; 
+    } }
+
+    public static string Narrator { get {
+        if (Game.NarratorName.IsNullOrEmpty()) 
+        {
+            Game.NarratorName = (Game.PlayerName.IsNullOrEmpty()) 
+                ? Names.Random()
+                : Names.FindAll(n => n != Game.PlayerName).Random();
+        }
+        return $"<color=#{Game.NarratorColor}>{Game.NarratorName}</color>";
+    } }
+
+    public static List<string> Flags = new List<string>() {};
     
     public static async Task Greeting() 
     {
-        Game.PlayerName = Names.Random();
-        Game.NarratorName = Names.FindAll(n => n != Game.PlayerName).Random();
+        if (Flags.Contains("Greeting")) return;
+        Flags.Add("Greeting");
 
         var textBox = await Dialogue.Begin(new TextBoxModel(
             text: $"Good morning! It is I your best friend {Narrator}."
@@ -60,5 +80,40 @@ public class Story : SingleInstance<Story>
             text: "Today I have something wonderful planned for you. Go outside and see my surprise.",
             speaker: $"{Narrator}"
         ));
+    }
+
+    public static async Task ButterKnifeGet() 
+    {
+        if (Flags.Contains("ButterKnifeGet")) return;
+        Flags.Add("ButterKnifeGet");
+
+        var textBox = await Dialogue.Begin(new TextBoxModel(
+            text: $"What a wondeful butter knife. I made it myself.",
+            speaker: $"{Narrator}"
+        ));
+
+        await Dialogue.End(textBox, new TextBoxModel(
+            text: $"I was hoping you could do some yard work today {Player}. Your new gift should do the trick.",
+            speaker: $"{Narrator}"
+        ));
+    }
+
+    public static async Task DayExcercise() 
+    {
+        if (Flags.Contains("DayExcercise")) return;
+        Flags.Add("DayExcercise");
+
+        var textBox = await Dialogue.Begin(new TextBoxModel(
+            text: $"Good morning!",
+            speaker: $"{Narrator}"
+        ));
+
+        await Dialogue.End(textBox, new TextBoxModel(
+            text: "Today I think you should get some exercise! Give me some jumping jacks!",
+            speaker: $"{Narrator}"
+        ));
+
+        Game.Player.JumpCount = 0;
+        Flags.Add("DayExcerciseEnd");
     }
 }

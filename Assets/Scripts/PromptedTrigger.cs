@@ -3,11 +3,35 @@ using UnityEngine;
 
 public class PromptedTrigger : MonoBehaviour
 {
-    public event EventHandler<bool> PromptedTriggerEntered;
-    public event EventHandler<bool> PromptedTriggerAccepted;
-    public event EventHandler<bool> PromptedTriggerExited;
+    public event EventHandler<bool> Entered;
+    public event EventHandler<bool> Accepted;
+    public event EventHandler<bool> Exited;
 
     private bool isAsking = false;
+
+    public void Deactivate()
+    {
+        var player = FindObjectOfType<Player>();
+
+        if (player)
+        {
+            isAsking = false;
+            player.InspectPrompt.SetActive(false);
+        }
+
+        Destroy(gameObject);
+    }
+
+    public void Disable()
+    {
+        var player = FindObjectOfType<Player>();
+
+        if (player)
+        {
+            isAsking = false;
+            player.InspectPrompt.SetActive(false);
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -17,7 +41,7 @@ public class PromptedTrigger : MonoBehaviour
         {
             isAsking = true;
             player.InspectPrompt.SetActive(true);
-            if (PromptedTriggerEntered != null) PromptedTriggerEntered(this, true);
+            if (Entered != null) Entered(this, true);
         }
     }
 
@@ -25,7 +49,7 @@ public class PromptedTrigger : MonoBehaviour
     {
         if (isAsking && Input.GetKeyDown("z"))
         {
-            if (PromptedTriggerAccepted != null) PromptedTriggerAccepted(this, true);
+            if (Accepted != null) Accepted(this, true);
         }
     }
 
@@ -37,7 +61,7 @@ public class PromptedTrigger : MonoBehaviour
         {
             isAsking = false;
             player.InspectPrompt.SetActive(false);
-            if (PromptedTriggerExited != null) PromptedTriggerExited(this, true);
+            if (Exited != null) Exited(this, true);
         }
     }
 }

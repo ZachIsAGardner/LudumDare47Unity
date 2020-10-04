@@ -15,15 +15,22 @@ public class Song : SingleInstance<Song>
     {
         AudioClip clip = Instance.Songs.Find(f => f.name == songName);
 
-        if (clip == null) return;
+        if (clip == null) 
+        {
+            print($"Couldn't find a clip with the name {songName}");
+            return;
+        };
 
         if (Instance.audioSource == null) 
         {
             GameObject go = Game.New(clip.name);
             go.AddComponent<AudioSource>();
             Instance.audioSource = go.GetComponent<AudioSource>();
+            Instance.audioSource.volume = CONSTANTS.MUSIC_VOLUME;
+            Instance.audioSource.loop = true;
         }
 
-        Instance.audioSource.PlayOneShot(clip);
+        Instance.audioSource.clip = clip;
+        Instance.audioSource.Play();
     }
 }

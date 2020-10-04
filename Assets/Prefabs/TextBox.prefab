@@ -296,7 +296,7 @@ MonoBehaviour:
   ToneIntervalMax: 1
   Auto: 0
   CrawlTime: 0
-  Tone: Beep2
+  Tone: 
   CloseWhenDone: 1
   PlayOnStart: 0
 --- !u!1 &6047083033443995115
@@ -498,7 +498,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc5deaa0190976c4e938e62ce37e5879, type: 2}
   m_sharedMaterial: {fileID: 8870908171568455415, guid: dc5deaa0190976c4e938e62ce37e5879, type: 2}

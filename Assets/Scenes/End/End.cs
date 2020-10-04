@@ -55,8 +55,9 @@ public class End : MonoBehaviour
                 while (!sceneTransition.DidReachHalfway)
                 {
                     await new WaitForUpdate();
-                        Application.Quit();
                 }
+                
+                Application.Quit();
             }
         }
     }
