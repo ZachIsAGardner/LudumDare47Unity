@@ -11,7 +11,11 @@ public class Game : SingleInstance<Game>
     public static bool IsPaused = false;
     public static bool IsTransitioning = false;
 
-    public SceneTransition SceneTransitionPrefab;
+    public static string PlayerName = "";
+    public static string PlayerColor = "12e1as";
+    public static string NarratorName = "";
+    public static string NarratorColor = "bd7455";
+
     private SceneTransition sceneTransitionInstance;
     private static int spawnPoint = 0;
 
@@ -36,13 +40,14 @@ public class Game : SingleInstance<Game>
 
     async void Awake()
     {
+        base.Awake();
         Screen.SetResolution(960, 540, false);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (SceneManager.GetActiveScene().name == "Title") return;
+        if (SceneManager.GetActiveScene().name == "Title" || SceneManager.GetActiveScene().name == "End") return;
 
         var player = Game.New(Prefabs.Get("Player"));
 
@@ -77,20 +82,22 @@ public class Game : SingleInstance<Game>
     /// Load a scene with the provided name.
     /// </summary>
     /// <param name="sceneName">The name of the scene to load.</param>
-    public static async Task LoadAsync(string sceneName, int spawnPoint = 0)
+    public static async Task LoadAsync(string sceneName, SceneTransition sceneTransitionPrefab, int spawnPoint = 0)
     {
-        spawnPoint = 0;
+        Game.spawnPoint = spawnPoint;
 
         IsTransitioning = true;
 
         // Transition out
-        Instance.sceneTransitionInstance = Instantiate(Instance.SceneTransitionPrefab);
+        Instance.sceneTransitionInstance = Instantiate(sceneTransitionPrefab);
         Instance.sceneTransitionInstance.Out();
 
         while (!Instance.sceneTransitionInstance.DidReachHalfway)
         {
             await new WaitForUpdate();
         }
+
+        await new WaitForSeconds(0.25f);
 
         SceneManager.LoadScene(sceneName);
 

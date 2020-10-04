@@ -6,6 +6,7 @@ public class Home : MonoBehaviour
 {
     public Trigger Trigger;
     public PromptedTrigger HouseTrigger;
+    public Trigger ExitTrigger;
     private bool triggered = false;
     public Animator HouseDoorAnimator;
 
@@ -18,6 +19,7 @@ public class Home : MonoBehaviour
         ));
 
         Trigger.TriggerEnter += Triggered;
+        ExitTrigger.TriggerEnter += ExitTriggered;
         HouseTrigger.PromptedTriggerAccepted += HouseAccepted;
         HouseTrigger.PromptedTriggerEntered += HouseEntered;
         HouseTrigger.PromptedTriggerExited += HouseExited;
@@ -28,6 +30,14 @@ public class Home : MonoBehaviour
         if (args.Other.CompareTag("Player")) 
         {
             DisplayText();
+        }
+    }
+
+    private async void ExitTriggered(object source, TriggerEnterEventArgs args)
+    {
+        if (args.Other.CompareTag("Player")) 
+        {
+            Game.LoadAsync("Exit", Prefabs.Get<SceneTransition>("FadeSceneTransition"));
         }
     }
 
@@ -43,7 +53,7 @@ public class Home : MonoBehaviour
 
     private async void HouseAccepted(object source, bool hit)
     {
-        Game.LoadAsync("InsideHome");
+        Game.LoadAsync("InsideHome", Prefabs.Get<SceneTransition>("FadeSceneTransition"));
     }
 
     private async void DisplayText()

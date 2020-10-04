@@ -135,8 +135,15 @@ public class TextBox : MonoBehaviour
     {
         SkipToEnd = false;
 
-        if (speakerProComponent != null)
-            speakerProComponent.text = Speaker ?? "";
+        if (speakerProComponent != null && !String.IsNullOrWhiteSpace(Speaker))
+        {
+            speakerProComponent.text = Speaker;
+            speakerProComponent.transform.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            speakerProComponent.transform.parent.gameObject.SetActive(false);
+        }
 
         if (CrawlTime > 0)
             await DisplayTextAsync(Text);
@@ -159,10 +166,55 @@ public class TextBox : MonoBehaviour
         IsActive = true;
         displayedText = "";
 
-        foreach (char letter in text.ToCharArray())
+        var chars = text.ToCharArray();
+
+        for (int i = 0; i < chars.Length; i ++)
         {
+            var letter = chars[i];
+
             if (SkipToEnd)
                 break;
+
+            // Entering markdown
+            if (letter == '<')
+            {
+                var end = text.IndexOf(">", i);
+                var el = text.Substring(i, end - i + 1);
+
+                var end2 = text.IndexOf("<", end + 1);
+                var innerText = text.Substring(end + 1, end2 - end - 1);
+
+                var end3 = text.IndexOf(">", end + 1);
+                i = end3;
+
+                var currentStr = displayedText;
+                var displayedInnerText = "";
+
+                for (int j = 0; j < innerText.Length; j++)
+                {
+                    var letterJ = innerText[j];
+
+                    if (SkipToEnd)
+                        break;
+
+                    displayedInnerText += letterJ;
+
+                    // Just assume color for now.
+                    displayedText = currentStr + $"{el}{displayedInnerText}</color>";
+
+                    toneInterval--;
+
+                    if (Tone != null && toneInterval <= 0)
+                    {
+                        Sound.Play(Tone);
+                        toneInterval = ToneIntervalMax;
+                    }
+
+                    await WaitAsync(letter);
+                }
+
+                continue;
+            }
 
             displayedText += letter;
             toneInterval--;
@@ -175,12 +227,12 @@ public class TextBox : MonoBehaviour
 
             await WaitAsync(letter);
         }
-
-        displayedText += "\n";
         
-
         IsActive = false;
         displayedText = Text;
+
+        await new WaitForUpdate();
+        await new WaitForUpdate();
 
         if (Auto)
         {
