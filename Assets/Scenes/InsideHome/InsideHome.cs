@@ -140,7 +140,7 @@ public class InsideHome : MonoBehaviour
         }
         else
         {
-            ExitTrigger.gameObject.SetActive(false);
+            ExitTrigger.gameObject.SetActive(true);
         }
     }
 
