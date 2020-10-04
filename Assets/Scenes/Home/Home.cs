@@ -7,6 +7,7 @@ public class Home : MonoBehaviour
     public Trigger Trigger;
     public PromptedTrigger HouseTrigger;
     private bool triggered = false;
+    public Animator HouseDoorAnimator;
 
     void Start()
     {
@@ -17,7 +18,9 @@ public class Home : MonoBehaviour
         ));
 
         Trigger.TriggerEnter += Triggered;
-        HouseTrigger.PromptedTriggerAccepted += HouseTriggered;
+        HouseTrigger.PromptedTriggerAccepted += HouseAccepted;
+        HouseTrigger.PromptedTriggerEntered += HouseEntered;
+        HouseTrigger.PromptedTriggerExited += HouseExited;
     }
 
     private async void Triggered(object source, TriggerEnterEventArgs args)
@@ -28,9 +31,19 @@ public class Home : MonoBehaviour
         }
     }
 
-    private async void HouseTriggered(object source, bool hit)
+    private async void HouseEntered(object source, bool hit) 
     {
-        Game.Load("InsideHome", 0);
+        HouseDoorAnimator.SetInteger("State", 1);
+    }
+
+    private async void HouseExited(object source, bool hit) 
+    {
+        HouseDoorAnimator.SetInteger("State", 0);
+    }
+
+    private async void HouseAccepted(object source, bool hit)
+    {
+        Game.LoadAsync("InsideHome");
     }
 
     private async void DisplayText()

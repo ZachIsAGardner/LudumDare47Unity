@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class PromptedTrigger : MonoBehaviour
 {
+    public event EventHandler<bool> PromptedTriggerEntered;
     public event EventHandler<bool> PromptedTriggerAccepted;
+    public event EventHandler<bool> PromptedTriggerExited;
 
     private bool isAsking = false;
 
@@ -15,6 +17,7 @@ public class PromptedTrigger : MonoBehaviour
         {
             isAsking = true;
             player.InspectPrompt.SetActive(true);
+            if (PromptedTriggerEntered != null) PromptedTriggerEntered(this, true);
         }
     }
 
@@ -34,6 +37,7 @@ public class PromptedTrigger : MonoBehaviour
         {
             isAsking = false;
             player.InspectPrompt.SetActive(false);
+            if (PromptedTriggerExited != null) PromptedTriggerExited(this, true);
         }
     }
 }

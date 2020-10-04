@@ -2,12 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Game : SingleInstance<Game>
 {
     public static bool IsPaused = false;
+    public static bool IsTransitioning = false;
+
+    public SceneTransition SceneTransitionPrefab;
+    private SceneTransition sceneTransitionInstance;
     private static int spawnPoint = 0;
 
     public static GameObject Dynamic
@@ -37,6 +42,8 @@ public class Game : SingleInstance<Game>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (SceneManager.GetActiveScene().name == "Title") return;
+
         var player = Game.New(Prefabs.Get("Player"));
 
         var spawn = FindObjectsOfType<Spawn>().ToList().Find(s => s.SpawnID == spawnPoint);
@@ -49,7 +56,7 @@ public class Game : SingleInstance<Game>
         {
             player.transform.position = Vector3.zero;
         }
-    }   
+    }
 
     void Update()
     {
@@ -70,10 +77,27 @@ public class Game : SingleInstance<Game>
     /// Load a scene with the provided name.
     /// </summary>
     /// <param name="sceneName">The name of the scene to load.</param>
-    public static void Load(string sceneName, int spawnPoint = 0)
+    public static async Task LoadAsync(string sceneName, int spawnPoint = 0)
     {
         spawnPoint = 0;
+
+        IsTransitioning = true;
+
+        // Transition out
+        Instance.sceneTransitionInstance = Instantiate(Instance.SceneTransitionPrefab);
+        Instance.sceneTransitionInstance.Out();
+
+        while (!Instance.sceneTransitionInstance.DidReachHalfway)
+        {
+            await new WaitForUpdate();
+        }
+
         SceneManager.LoadScene(sceneName);
+
+        // Transition in
+        Instance.sceneTransitionInstance.In();
+
+        IsTransitioning = false;
     }
 
     /// <summary>
