@@ -18,7 +18,7 @@ public class CuttableGrass : MonoBehaviour
             effect.transform.position = Game.Player.transform.position;
 
             animator.SetInteger("State", 1);
-            Sound.Play("WoodFalling", true, 0.5f);
+            Sound.Play("WoodFalling", true, 0.25f);
             Game.CutGrassCount += 1;
         };
     }

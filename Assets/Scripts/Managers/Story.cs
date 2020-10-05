@@ -64,7 +64,7 @@ public class Story : SingleInstance<Story>
         ));
 
         await Dialogue.Next(textBox, new TextBoxModel(
-            text: $"In case you forgot, {Player}, you and I are the bestest of friends. You are truly scrumptious... (They whisper to themselves)",
+            text: $"In case you forgot, {Player}, you and I are the bestest of friends.",
             speaker: $"{Narrator}"
         ));
 

@@ -89,19 +89,21 @@ public class Home : MonoBehaviour
 
                     await new WaitForSeconds(2.5f);
                     Story.Flags.Add("Tree5");
-                    Song.ChangePitch(1f, 0.25f);
+                    Song.ChangePitch(1f, 0.125f);
                     var textBox = await Dialogue.Begin(new TextBoxModel(
                         text: "Oh well!",
                         speaker: $"{Story.Narrator}"
                     ));
 
+                    Story.Flags.Add("Tree6");
                     await Dialogue.Next(textBox, new TextBoxModel(
                         text: "It was kind of an eye sore anyways.",
                         speaker: $"{Story.Narrator}"
                     ));
 
+                    Story.Flags.Add("Tree7");
                     await Dialogue.End(textBox, new TextBoxModel(
-                        text: "I think that's enough for now anyways. Thanks for being such a good listener :) <3",
+                        text: "I think that's enough for now anyways. Thanks for being such a good listener :)",
                         speaker: $"{Story.Narrator}"
                     ));
 
