@@ -23,6 +23,7 @@ public class Player : Character, ILiverExtra
     private Vector3 velocity = new Vector3(0, 0, 0);
     private int dir = 0;
     public int JumpCount = 0;
+    private Vector3 input = new Vector3(0, 0, 0);
 
     protected override void Start()
     {
@@ -39,6 +40,7 @@ public class Player : Character, ILiverExtra
     {
         base.Update();
 
+        Animate();
         Move();
 
         if (transform.position.y < -20) 
@@ -54,7 +56,7 @@ public class Player : Character, ILiverExtra
 
     private void Move()
     {
-        var input = new Vector3(0, 0, 0);
+        input = new Vector3(0, 0, 0);
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -102,16 +104,19 @@ public class Player : Character, ILiverExtra
 
     private void Animate()
     {
-        // Idling
-        if (velocity.x == 0 && velocity.y == 0)
+        if (!IsGrounded()) 
         {
-            animator.SetInteger("State", 0);
+            animator.SetInteger("State", 2);
+            return;
         }
-        // Walking
-        else
+
+        if (input != Vector3.zero)
         {
             animator.SetInteger("State", 1);
+            return;
         }
+
+        animator.SetInteger("State", 0);
     }
 
     public void HealthDepleted(HitBox other)
