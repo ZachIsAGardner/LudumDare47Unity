@@ -377,7 +377,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 60f5e2ccf37f1b04298a4be766f5f616, type: 2}
+  - {fileID: 2100000, guid: fd0be0470f01cdb42842378474cb510d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -500,9 +500,11 @@ MonoBehaviour:
   Acc: 0.00125
   Model: {fileID: 8411374092335998742}
   Gravity: 24
+  NormalGravity: 0
   MinJumpStrength: 5.5
   JumpStrength: 10
   InspectPrompt: {fileID: 1849379787}
+  JumpCount: 0
 --- !u!1 &8411374092335998742
 GameObject:
   m_ObjectHideFlags: 0
